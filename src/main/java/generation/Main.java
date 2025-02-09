@@ -1,6 +1,7 @@
 package generation;
 
 import fr.ul.miashs.compil.arbre.*;
+import tds.TableDesSymboles;
 import tds.Entree;
 
 public class Main {
@@ -9,24 +10,48 @@ public class Main {
         Prog programme = new Prog();
 
         // Définir les variables globales
-        Entree varI = new Entree("i", "int", "global");
-        varI.setValeur(10);
-        Entree varJ = new Entree("j", "int", "global");
-        varJ.setValeur(20);
-        Entree varK = new Entree("k", "int", "global");
-        Entree varL = new Entree("l", "int", "global");
+        Entree varA = new Entree("a", "int", "global");
+        Entree varB = new Entree("b", "int", "global");
+        Entree varX = new Entree("x", "int", "global");
 
         // Ajouter les variables globales à la TDS
         GenerateurCode generateur = new GenerateurCode();
-        generateur.getTds().ajouterSymbole("i", varI);
-        generateur.getTds().ajouterSymbole("j", varJ);
-        generateur.getTds().ajouterSymbole("k", varK);
-        generateur.getTds().ajouterSymbole("l", varL);
+        generateur.getTds().ajouterSymbole("a", varA);
+        generateur.getTds().ajouterSymbole("b", varB);
+        generateur.getTds().ajouterSymbole("x", varX);
 
         // Crée la fonction principale "main"
         Fonction mainFonction = new Fonction("main");
+        Bloc blocPrincipal = new Bloc();
 
-        // Ajoute la fonction main au programme
+        // Construire l'expression x = a * 2 + (b - 5) / 3;
+        Multiplication multiplication = new Multiplication();
+        multiplication.setFilsGauche(new Idf("a"));
+        multiplication.setFilsDroit(new Const(2));
+
+        Moins soustraction = new Moins();
+        soustraction.setFilsGauche(new Idf("b"));
+        soustraction.setFilsDroit(new Const(5));
+
+        Division division = new Division();
+        division.setFilsGauche(soustraction);
+        division.setFilsDroit(new Const(3));
+
+        Plus addition = new Plus();
+        addition.setFilsGauche(multiplication);
+        addition.setFilsDroit(division);
+
+        Affectation affectation = new Affectation();
+        affectation.setFilsGauche(new Idf("x"));
+        affectation.setFilsDroit(addition);
+
+        // Ajouter l'instruction au bloc principal
+        blocPrincipal.ajouterUnFils(affectation);
+
+        // Ajouter le bloc principal à la fonction main
+        mainFonction.ajouterUnFils(blocPrincipal);
+
+        // Ajouter la fonction main au programme
         programme.ajouterUnFils(mainFonction);
 
         // Affiche l'arbre abstrait
