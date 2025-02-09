@@ -16,6 +16,10 @@ public class GenerateurCode {
         this.adresseCourante = 0;
     }
 
+    public TableDesSymboles getTds() {
+        return tds;
+    }
+
     public String genererProgramme(Prog programme) {
         initialiserProgramme();
         genererFonctions(programme);
@@ -25,6 +29,8 @@ public class GenerateurCode {
 
     private void initialiserProgramme() {
         code.append(".include beta.uasm\n");
+        code.append(".include intio\n");
+        code.append(".option tty\n");
         code.append("CMOVE(pile, SP)\n");
         code.append("BR(debut)\n\n");
     }
@@ -41,6 +47,8 @@ public class GenerateurCode {
         code.append(fonction.getValeur()).append(":\n");
         code.append("    PUSH(LP)\n    PUSH(BP)\n    MOVE(SP, BP)\n");
         code.append("    ALLOCATE(0)\n");
+
+        tds.ajouterSymbole(fonction.getValeur().toString(), new Entree(fonction.getValeur().toString(), "void", "Fonction"));
 
         for (Noeud instruction : fonction.getFils()) {
             genererInstruction(instruction);
@@ -87,13 +95,14 @@ public class GenerateurCode {
             Entree entree = tds.chercherSymbole(nomVariable);
 
             if (entree == null) {
-                tds.ajouterSymbole(nomVariable, "int", adresseCourante);
+                Entree nouvelleEntree = new Entree(nomVariable, "int", "global");
+                tds.ajouterSymbole(nomVariable, nouvelleEntree);
                 entree = tds.chercherSymbole(nomVariable);
                 adresseCourante += 4;
             }
 
             genererExpression(droit);
-            code.append("    ST(R0, ").append(entree.getAdresse()).append(")\n");
+            code.append("    ST(R0, ").append(adresseCourante).append(")\n");
         }
     }
 
@@ -157,7 +166,7 @@ public class GenerateurCode {
             Entree entree = tds.chercherSymbole(nomVariable);
 
             if (entree != null) {
-                code.append("    LD(").append(entree.getAdresse()).append(", R0)\n");
+                code.append("    LD(").append(adresseCourante).append(", R0)\n");
             } else {
                 throw new RuntimeException("Variable non déclarée: " + nomVariable);
             }
@@ -186,5 +195,10 @@ public class GenerateurCode {
 
     private void finaliserProgramme() {
         code.append("debut:\n    CALL(main)\n    HALT()\n\npile:\n");
+    }
+
+    public void afficherArbre(Noeud racine) {
+        TxtAfficheur.afficher(racine);
+        GuiAfficheur.afficher(racine);
     }
 }

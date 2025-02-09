@@ -5,7 +5,6 @@ import java.util.Map;
 
 /**
  * Classe pour représenter la Table des Symboles (TDS)
- * Elle enregistre les variables, fonctions et leurs informations.
  */
 public class TableDesSymboles {
 
@@ -27,15 +26,14 @@ public class TableDesSymboles {
     /**
      * Ajoute un symbole dans la table des symboles.
      * @param nom Le nom de l'identifiant (variable, fonction).
-     * @param type Le type de l'identifiant (int, fonction, etc.).
-     * @param adresse L'adresse mémoire ou le registre associé.
+     * @param entree L'objet Entree contenant les informations sur l'identifiant.
      * @return true si l'ajout est réussi, false si le symbole existe déjà.
      */
-    public boolean ajouterSymbole(String nom, String type, int adresse) {
+    public boolean ajouterSymbole(String nom, Entree entree) {
         if (symboles.containsKey(nom)) {
             return false; // Le symbole existe déjà dans ce scope
         }
-        symboles.put(nom, new Entree(nom, type, adresse));
+        symboles.put(nom, entree);
         return true;
     }
 
@@ -55,12 +53,11 @@ public class TableDesSymboles {
     }
 
     /**
-     * Affiche la table des symboles pour le débogage.
+     * Affiche la table des symboles sous forme formatée.
      */
     public void afficherTDS() {
-        System.out.println("Table des Symboles :");
-        for (Entree entree : symboles.values()) {
-            System.out.println(entree);
+        for (Map.Entry<String, Entree> entry : symboles.entrySet()) {
+            System.out.println(entry.getValue());
         }
     }
 }
