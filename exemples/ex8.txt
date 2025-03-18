@@ -1,0 +1,9 @@
+fonction numerique f(entier a){
+	si (a<=0) alors{
+		renvoie(0);
+	}
+	renvoie(a+f(a-1));
+}
+fonction vide debut(){
+	afficher(f(6));
+}

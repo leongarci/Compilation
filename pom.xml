@@ -28,10 +28,10 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>fr.ul.miashs</groupId>
-  <artifactId>compil</artifactId>
-  <version>1.0</version>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>fr.ul.miashs</groupId>
+	<artifactId>compil</artifactId>
+	<version>1.0</version>
 	<properties>
 		<!-- Le code source en UTF8 -->
 		<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
@@ -48,6 +48,45 @@
 	</properties>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.github.vbmacher</groupId>
+				<artifactId>cup-maven-plugin</artifactId>
+				<version>11b-20160615-3</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals><goal>generate</goal></goals>
+						<configuration>
+							<cupDefinition>
+								src/main/cuplex/Parser.cup
+							</cupDefinition>
+							<className>ParserCup</className>
+							<symbolsName>Sym</symbolsName>
+							<outputDirectory>src/main/java</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>de.jflex</groupId>
+				<artifactId>jflex-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<lexDefinitions>
+						<lexDefinition>src/main/cuplex</lexDefinition>
+					</lexDefinitions>
+					<outputDirectory>src/main/java</outputDirectory>
+					<verbose>true</verbose>
+				</configuration>
+			</plugin>
 			<plugin>
 				<!-- use java 11 -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -116,6 +155,10 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>com.github.vbmacher</groupId>
+			<artifactId>java-cup-runtime</artifactId>
+			<version>11b-20160615-3</version>
+		</dependency>
 	</dependencies>
 </project>

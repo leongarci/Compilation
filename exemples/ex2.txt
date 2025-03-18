@@ -1,0 +1,5 @@
+fonction vide debut(){
+           	entier i = 4 ;
+           	texte t= "test" ;
+           	numerique n = 3.14 ;
+}

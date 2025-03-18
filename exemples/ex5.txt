@@ -1,0 +1,11 @@
+fonction numerique f(entier a,entier b){
+
+	numerique res=a*2+(b-5)/3;
+	renvoie (res);
+}
+fonction vide debut(){
+	entier a = 100;
+	entier c =170;
+	afficher(f(a,c));
+}
+

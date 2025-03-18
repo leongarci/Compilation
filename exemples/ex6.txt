@@ -1,0 +1,10 @@
+ fonction vide debut(){
+	entier a = 1;
+	entier b=2;
+	entier x;
+	si (a>b) alors{
+		x=1000;
+	}sinon{
+		x=2000;
+	}
+}

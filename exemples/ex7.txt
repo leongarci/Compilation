@@ -1,0 +1,7 @@
+fonction vide debut(){
+	entier i=0;
+	tantQue (i<6) faire {
+		afficher(i);
+		i=i+1;
+	}
+}

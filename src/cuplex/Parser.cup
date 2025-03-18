@@ -1,0 +1,95 @@
+package generated.fr.ul.miashs.test;
+
+/* Code Java */
+parser code {:
+    public Object res;
+:}
+
+/*----------------------------------------------*/
+
+/* Définition des terminaux */
+terminal FONCTION, VIDE, NUMERIQUE, ENTIER, TEXTE, SI, ALORS, SINON, TANTQUE, FAIRE, AFFICHER, RENVOIE;
+terminal String ID, STRING;
+terminal Integer NUM;
+terminal Double FLOAT;
+terminal PAROUV, PARFER, ACCOUV, ACCFER, EGAL, PLUS, MOINS, MUL, DIV, VIRG, POINTVIRG;
+terminal INF, INFEG, SUPEG, SUP, EGALLOG;
+
+/* Définition des non-terminaux */
+non terminal Programme, ListeFonctions, Fonction, Bloc, ListeInstructions, Instruction, Declaration, Expression, ExpressionArithmetique, ExpressionComparaison, Condition, Boucle, Parametres, Type, ListeTypesParams, Arguments;
+
+/* Définition de la priorité des opérateurs */
+precedence left INF, INFEG, SUPEG, SUP, EGALLOG;
+precedence left PLUS, MOINS;
+precedence left MUL, DIV;
+
+/* Axiome de la grammaire */
+start with Programme;
+
+/*----------------------------------------------*/
+
+/* Définition des règles de production */
+Programme ::= ListeFonctions ;
+
+ListeFonctions ::= Fonction ListeFonctions
+                 | Fonction ;
+
+Fonction ::= FONCTION Type ID PAROUV ListeTypesParams PARFER Bloc ;
+
+Type ::= VIDE
+       | ENTIER
+       | NUMERIQUE
+       | TEXTE ;
+
+ListeTypesParams ::= Type ID
+                   | Type ID VIRG ListeTypesParams
+                   |;
+
+Bloc ::= ACCOUV ListeInstructions ACCFER ;
+
+ListeInstructions ::= Instruction ListeInstructions
+                    | ;
+
+Instruction ::= Declaration
+             | Condition
+             | Boucle
+             | AFFICHER PAROUV Expression PARFER POINTVIRG
+             | RENVOIE PAROUV Expression PARFER POINTVIRG
+             | Expression POINTVIRG ;
+
+Expression ::= ExpressionArithmetique
+            | ExpressionComparaison;
+
+ExpressionArithmetique ::= ID EGAL ExpressionArithmetique
+                         | ExpressionArithmetique PLUS ExpressionArithmetique
+                         | ExpressionArithmetique MOINS ExpressionArithmetique
+                         | ExpressionArithmetique MUL ExpressionArithmetique
+                         | ExpressionArithmetique DIV ExpressionArithmetique
+                         | PAROUV ExpressionArithmetique PARFER
+                         | ID PAROUV Arguments PARFER
+                         | NUM
+                         | FLOAT
+                         | ID;
+
+ExpressionComparaison ::= ExpressionArithmetique INF ExpressionArithmetique
+                        | ExpressionArithmetique INFEG ExpressionArithmetique
+                        | ExpressionArithmetique SUPEG ExpressionArithmetique
+                        | ExpressionArithmetique SUP ExpressionArithmetique
+                        | ExpressionArithmetique EGALLOG ExpressionArithmetique;
+
+Arguments ::= ExpressionArithmetique
+           | ExpressionArithmetique VIRG Arguments
+           |  ;
+
+Declaration ::= ENTIER ID EGAL ExpressionArithmetique POINTVIRG
+             | NUMERIQUE ID EGAL ExpressionArithmetique POINTVIRG
+             | TEXTE ID EGAL STRING POINTVIRG
+             | ENTIER ID POINTVIRG
+             | NUMERIQUE ID POINTVIRG
+             | TEXTE ID POINTVIRG
+             ;
+
+Condition ::= SI PAROUV ExpressionComparaison PARFER ALORS Bloc
+           | SI PAROUV ExpressionComparaison PARFER ALORS Bloc SINON Bloc ;
+
+Boucle ::= TANTQUE PAROUV ExpressionComparaison PARFER FAIRE Bloc ;
